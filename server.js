@@ -50,13 +50,18 @@ function getDefaultData() {
         name_bn: 'ইয়ামানি খালতা বুস্টার',
         tagline: 'তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের যত্ন',
         description: 'তিব্বে নববীর অনুপ্রেরণায় তৈরি ১০০% প্রাকৃতিক বিশেষ শক্তিবর্ধক। খাঁটি মধু, কালোজিরা, বিভিন্ন প্রকার প্রিমিয়াম বাদাম ও ভেষজ উপাদানের সমন্বয়ে তৈরি। রোগ প্রতিরোধ ক্ষমতা বৃদ্ধি করে ও স্ট্যামিনা বাড়ায়।',
-        price: 1450,
-        original_price: 2150,
+        price: 1250,
+        original_price: 1750,
         image: '/images/yamani-khalta-jar.jpg',
         banner_image: '/images/yamani-khalta-banner.jpg',
         category: 'booster',
         is_featured: 1,
-        stock: 100
+        stock: 100,
+        variants: [
+          { id: '250gm', weight: '250gm', weight_bn: '২৫০ গ্রাম', price: 550, original_price: 850, savings: 300 },
+          { id: '500gm', weight: '500gm', weight_bn: '৫০০ গ্রাম', price: 1250, original_price: 1750, savings: 500, is_default: true },
+          { id: '1kg', weight: '1kg', weight_bn: '১ কেজি (১০০০ গ্রাম)', price: 1850, original_price: 2650, savings: 800 }
+        ]
       }
     ],
     reviews: [
@@ -167,7 +172,7 @@ app.get('/api/products/:id', (req, res) => {
 // POST /api/orders — Create a new order (Cash on Delivery)
 app.post('/api/orders', (req, res) => {
   try {
-    const { customer_name, phone, address, district, product_id, quantity } = req.body;
+    const { customer_name, phone, address, district, product_id, quantity, variant } = req.body;
 
     // Validation
     if (!customer_name || !phone || !address || !district || !product_id || !quantity) {
@@ -181,6 +186,7 @@ app.post('/api/orders', (req, res) => {
     const cleanPhone = String(phone).trim().slice(0, 20);
     const cleanAddress = String(address).trim().slice(0, 500);
     const cleanDistrict = String(district).trim().slice(0, 50);
+    const cleanVariant = variant ? String(variant).trim().slice(0, 30) : '500gm';
 
     const phoneRegex = /^01[3-9]\d{8}$/;
     if (!phoneRegex.test(cleanPhone)) {
@@ -196,8 +202,12 @@ app.post('/api/orders', (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found.' });
     }
 
+    // Determine variant unit price
+    const variantPricing = { '250gm': 550, '500gm': 1250, '1kg': 1850 };
+    const unitPrice = variantPricing[cleanVariant] || (product.price || 1250);
+
     const qty = Math.min(20, Math.max(1, parseInt(quantity, 10) || 1));
-    const total_price = product.price * qty;
+    const total_price = unitPrice * qty;
 
     // Delivery charge: Dhaka area = ৳60, Outside = ৳120
     const dhakaDistricts = ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ', 'Dhaka', 'Gazipur', 'Narayanganj'];
@@ -215,7 +225,9 @@ app.post('/api/orders', (req, res) => {
       product_id: product.id,
       product_name: product.name,
       product_name_bn: product.name_bn,
+      variant: cleanVariant,
       quantity: qty,
+      unit_price: unitPrice,
       total_price,
       delivery_charge,
       grand_total,

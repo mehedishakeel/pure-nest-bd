@@ -44,10 +44,12 @@
       "name": "Pure Nest BD"
     },
     "offers": {
-      "@type": "Offer",
+      "@type": "AggregateOffer",
       "url": "https://www.purenestbd.shop/#order",
       "priceCurrency": "BDT",
-      "price": "1450",
+      "lowPrice": "550",
+      "highPrice": "1850",
+      "offerCount": "3",
       "priceValidUntil": "2027-12-31",
       "itemCondition": "https://schema.org/NewCondition",
       "availability": "https://schema.org/InStock",
@@ -85,7 +87,7 @@
   }
   </script>
 
-  <link rel="stylesheet" href="./css/style.css?v=3.1">
+  <link rel="stylesheet" href="./css/style.css?v=3.2">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
@@ -110,7 +112,7 @@
   <!-- ========== ANNOUNCEMENT BAR ========== -->
   <div class="marquee-bar">
     <div class="marquee-content">
-      <span>🔥 বিশেষ অফার! সীমিত সময়ের জন্য ৩২% পর্যন্ত ছাড়! 🔥 তিব্বে নববীর অনুপ্রেরণায় ইয়ামানি খালতা বুস্টার! 🎁 ক্যাশ অন ডেলিভারি সারাদেশে! &nbsp;&nbsp;&nbsp; 🔥 বিশেষ অফার! সীমিত সময়ের জন্য ৩২% পর্যন্ত ছাড়! 🔥 তিব্বে নববীর অনুপ্রেরণায় ইয়ামানি খালতা বুস্টার! 🎁 ক্যাশ অন ডেলিভারি সারাদেশে!</span>
+      <span>🔥 বিশেষ অফার! তিনটি ভিন্ন সাইজে উপলব্ধ — ২৫০ গ্রাম (৳৫৫০), ৫০০ গ্রাম (৳১২৫০) ও ১ কেজি (৳১৮৫০)! 🎁 ক্যাশ অন ডেলিভারি সারাদেশে! &nbsp;&nbsp;&nbsp; 🔥 বিশেষ অফার! তিনটি ভিন্ন সাইজে উপলব্ধ — ২৫০ গ্রাম (৳৫৫০), ৫০০ গ্রাম (৳১২৫০) ও ১ কেজি (৳১৮৫০)! 🎁 ক্যাশ অন ডেলিভারি সারাদেশে!</span>
     </div>
   </div>
 
@@ -129,9 +131,24 @@
           তিব্বে নববীর অনুপ্রেরণায় তৈরি বিশেষ প্রাকৃতিক শক্তিবর্ধক। খাঁটি মধু, কালোজিরা, কাজু-পেস্তা বাদাম ও জাফরানের সমন্বয়ে পুরুষের পূর্ণ জীবনীশক্তি ও সুস্বাস্থ্য নিশ্চিত করে।
         </p>
         <div class="hero-price-banner fade-in">
-          <span class="hero-price-label">সীমিত সময়ের অফার:</span>
-          <span class="hero-price-current">৳ ১,৪৫০</span>
-          <span class="hero-price-old">৳ ২,১৫০</span>
+          <span class="hero-price-label">অফার মূল্য:</span>
+          <span class="hero-price-current">৳ ৫৫০ – ৳ ১,৮৫০</span>
+          <span class="hero-price-badge">৩টি সাইজে উপলব্ধ</span>
+        </div>
+        <div class="hero-variant-pills fade-in">
+          <a href="#order" onclick="selectVariantAndScroll('250gm')" class="h-v-pill">
+            <span class="pill-wt">২৫০ গ্রাম</span>
+            <span class="pill-pr">৳ ৫৫০</span>
+          </a>
+          <a href="#order" onclick="selectVariantAndScroll('500gm')" class="h-v-pill popular">
+            <span class="pill-tag">জনপ্রিয়</span>
+            <span class="pill-wt">৫০০ গ্রাম</span>
+            <span class="pill-pr">৳ ১,২৫০</span>
+          </a>
+          <a href="#order" onclick="selectVariantAndScroll('1kg')" class="h-v-pill">
+            <span class="pill-wt">১ কেজি</span>
+            <span class="pill-pr">৳ ১,৮৫০</span>
+          </a>
         </div>
         <div class="hero-actions fade-in">
           <a href="#order" class="btn btn-accent hero-btn">🛍️ এখনই অর্ডার করুন</a>
@@ -170,9 +187,14 @@
           <p class="spotlight-subtitle">তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের পূর্ণ যত্ন ও শক্তি</p>
           
           <div class="product-highlight-price">
-            <span class="ph-current">৳ ১,৪৫০</span>
-            <span class="ph-original">৳ ২,১৫০</span>
-            <span class="ph-badge">৭০০ টাকা সাশ্রয়!</span>
+            <span class="ph-current">৳ ৫৫০ – ৳ ১,৮৫০</span>
+            <span class="ph-badge">৩টি সাইজে বিশেষ অফার!</span>
+          </div>
+
+          <div class="spotlight-variants-bar">
+            <span class="sv-item" onclick="selectVariantAndScroll('250gm')">🌿 ২৫০ গ্রাম: <strong>৳ ৫৫০</strong></span>
+            <span class="sv-item popular" onclick="selectVariantAndScroll('500gm')">🔥 ৫০০ গ্রাম: <strong>৳ ১,২৫০</strong></span>
+            <span class="sv-item" onclick="selectVariantAndScroll('1kg')">⭐ ১ কেজি: <strong>৳ ১,৮৫০</strong></span>
           </div>
 
           <div class="benefits-list">
@@ -208,7 +230,7 @@
 
           <div class="spotlight-cta">
             <a href="#order" class="btn btn-accent btn-lg">
-              🛒 অর্ডার করুন — মাত্র ৳ ১,৪৫০
+              🛒 অর্ডার করুন — ৳ ৫৫০ থেকে শুরু
             </a>
             <span class="free-gift-text">🎁 সীমিত সময়ের জন্য বিশেষ অফার চালু আছে!</span>
           </div>
@@ -283,11 +305,62 @@
             <img src="./images/yamani-khalta-jar.jpg" alt="Yamani Khalta Booster" class="selected-prod-img" width="1086" height="1448" loading="lazy" decoding="async">
             <div class="selected-prod-info">
               <h4>ইয়ামানি খালতা বুস্টার (Yamani Khalta Booster)</h4>
-              <p class="selected-prod-desc">তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের যত্ন | ১ জার</p>
-              <div class="selected-prod-price">মূল্য: <strong>৳ ১,৪৫০</strong> <del>৳ ২,১৫০</del></div>
+              <p class="selected-prod-desc" id="selectedProdDesc">তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের যত্ন | সাইজ: ৫০০ গ্রাম</p>
+              <div class="selected-prod-price">একক মূল্য: <strong id="selectedVariantPrice">৳ ১,২৫০</strong> <del id="selectedVariantOldPrice">৳ ১,৭৫০</del></div>
             </div>
-            <!-- Hidden Input for selected product ID -->
+            <!-- Hidden Inputs -->
             <input type="hidden" id="productSelect" value="1">
+            <input type="hidden" id="selectedVariantInput" value="500gm">
+          </div>
+
+          <!-- 3 Interactive Product Variants Selector -->
+          <div class="form-group variant-selector-group">
+            <label class="variant-selector-title">📦 প্যাক সাইজ / ওজন নির্বাচন করুন *</label>
+            <div class="variant-cards-grid" role="radiogroup" aria-label="পণ্য সাইজ নির্বাচন">
+              
+              <!-- 250gm Variant Card -->
+              <label class="variant-card" id="card-250gm" for="var-250gm">
+                <input type="radio" name="product_variant" id="var-250gm" value="250gm" onchange="selectVariant('250gm')">
+                <div class="variant-card-inner">
+                  <span class="v-badge">ট্রায়াল প্যাক</span>
+                  <div class="v-weight">২৫০ গ্রাম</div>
+                  <div class="v-price-wrap">
+                    <span class="v-price">৳ ৫৫০</span>
+                    <del class="v-old-price">৳ ৮৫০</del>
+                  </div>
+                  <div class="v-savings">৩০০ টাকা সাশ্রয়</div>
+                </div>
+              </label>
+
+              <!-- 500gm Variant Card (Default & Most Popular) -->
+              <label class="variant-card active" id="card-500gm" for="var-500gm">
+                <input type="radio" name="product_variant" id="var-500gm" value="500gm" checked onchange="selectVariant('500gm')">
+                <div class="variant-card-inner">
+                  <span class="v-badge popular">🔥 সবচেয়ে জনপ্রিয়</span>
+                  <div class="v-weight">৫০০ গ্রাম</div>
+                  <div class="v-price-wrap">
+                    <span class="v-price">৳ ১,২৫০</span>
+                    <del class="v-old-price">৳ ১,৭৫০</del>
+                  </div>
+                  <div class="v-savings">৫০০ টাকা সাশ্রয়</div>
+                </div>
+              </label>
+
+              <!-- 1kg Variant Card -->
+              <label class="variant-card" id="card-1kg" for="var-1kg">
+                <input type="radio" name="product_variant" id="var-1kg" value="1kg" onchange="selectVariant('1kg')">
+                <div class="variant-card-inner">
+                  <span class="v-badge value">⭐ সেরা সাশ্রয়ী</span>
+                  <div class="v-weight">১ কেজি</div>
+                  <div class="v-price-wrap">
+                    <span class="v-price">৳ ১,৮৫০</span>
+                    <del class="v-old-price">৳ ২,৬৫০</del>
+                  </div>
+                  <div class="v-savings">৮০০ টাকা সাশ্রয়</div>
+                </div>
+              </label>
+
+            </div>
           </div>
 
           <div class="form-row">
@@ -503,6 +576,6 @@
     </div>
   </div>
 
-  <script src="./js/app.js?v=3.0"></script>
+  <script src="./js/app.js?v=3.2"></script>
 </body>
 </html>

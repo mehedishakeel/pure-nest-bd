@@ -2960,3 +2960,276 @@ textarea:focus-visible {
   .marquee-content { animation-duration: 0.01ms !important; }
   @keyframes ctaPulseGlow { 0%, 100% { box-shadow: 0 4px 18px rgba(212, 144, 10, 0.4); transform: none; } }
 }
+
+/* ============================================================
+   Product Variant Selector System (250gm, 500gm, 1kg)
+   ============================================================ */
+
+/* Hero Price Badge */
+.hero-price-badge {
+  background: rgba(212, 168, 67, 0.25);
+  color: #ffd03b;
+  border: 1px solid rgba(255, 208, 59, 0.5);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* Hero Variant Quick Select Pills */
+.hero-variant-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.h-v-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 6px 14px;
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.h-v-pill:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffd03b;
+  transform: translateY(-2px);
+  color: #ffd03b;
+}
+
+.h-v-pill.popular {
+  background: rgba(212, 168, 67, 0.25);
+  border-color: rgba(255, 208, 59, 0.6);
+}
+
+.h-v-pill .pill-tag {
+  background: #e74c3c;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.h-v-pill .pill-wt {
+  font-weight: 700;
+}
+
+.h-v-pill .pill-pr {
+  color: #ffd03b;
+  font-weight: 800;
+}
+
+/* Spotlight Variants Bar */
+.spotlight-variants-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.sv-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  background: #f4fbf7;
+  border: 1.5px solid #c8e4d2;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #1a5632;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.sv-item:hover {
+  border-color: #1a5632;
+  background: #eef7f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 86, 50, 0.12);
+}
+
+.sv-item.popular {
+  background: #fff8e7;
+  border-color: #e5a824;
+}
+
+.sv-item strong {
+  margin-left: 4px;
+  color: #0f3d22;
+}
+
+/* Variant Selector in Order Form */
+.variant-selector-group {
+  margin-bottom: 22px;
+}
+
+.variant-selector-title {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.variant-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.variant-card {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid #dfe6e9;
+  border-radius: 14px;
+  padding: 14px 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.variant-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.variant-card:hover {
+  border-color: #2d8a56;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(26, 86, 50, 0.12);
+}
+
+.variant-card.active {
+  border-color: #1a5632;
+  background: linear-gradient(180deg, #f0f9f3 0%, #ffffff 100%);
+  box-shadow: 0 6px 20px rgba(26, 86, 50, 0.18), 0 0 0 1.5px #1a5632;
+  transform: translateY(-2px);
+}
+
+.variant-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.v-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #edf2f7;
+  color: #4a5568;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.v-badge.popular {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.v-badge.value {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.v-weight {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1a5632;
+  margin-top: 2px;
+}
+
+.v-price-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.v-price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.v-old-price {
+  font-size: 0.86rem;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.v-savings {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #059669;
+  margin-top: 2px;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 600px) {
+  .hero-variant-pills {
+    justify-content: center;
+  }
+
+  .spotlight-variants-bar {
+    flex-direction: column;
+  }
+
+  .variant-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .variant-card {
+    padding: 12px 14px;
+  }
+
+  .variant-card-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .v-badge {
+    order: 1;
+    margin-bottom: 0;
+  }
+
+  .v-weight {
+    order: 2;
+    font-size: 1.05rem;
+  }
+
+  .v-price-wrap {
+    order: 3;
+    margin-top: 0;
+  }
+
+  .v-savings {
+    display: none;
+  }
+}

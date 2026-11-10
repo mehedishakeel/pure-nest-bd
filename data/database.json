@@ -6,13 +6,42 @@
       "name_bn": "ইয়ামানি খালতা বুস্টার",
       "tagline": "তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের যত্ন",
       "description": "তিব্বে নববীর অনুপ্রেরণায় তৈরি ১০০% প্রাকৃতিক বিশেষ শক্তিবর্ধক। খাঁটি মধু, কালোজিরা, বিভিন্ন প্রকার প্রিমিয়াম বাদাম ও ভেষজ উপাদানের সমন্বয়ে তৈরি। রোগ প্রতিরোধ ক্ষমতা বৃদ্ধি করে, শারীরিক দুর্বলতা দূর করে ও কর্মক্ষমতা বহুগুণ বাড়ায়।",
-      "price": 1450,
-      "original_price": 2150,
+      "price": 1250,
+      "original_price": 1750,
       "image": "/images/yamani-khalta-jar.jpg",
       "banner_image": "/images/yamani-khalta-banner.jpg",
       "category": "booster",
       "is_featured": 1,
       "stock": 100,
+      "variants": [
+        {
+          "id": "250gm",
+          "weight": "250gm",
+          "weight_bn": "২৫০ গ্রাম",
+          "price": 550,
+          "original_price": 850,
+          "savings": 300,
+          "is_default": false
+        },
+        {
+          "id": "500gm",
+          "weight": "500gm",
+          "weight_bn": "৫০০ গ্রাম",
+          "price": 1250,
+          "original_price": 1750,
+          "savings": 500,
+          "is_default": true
+        },
+        {
+          "id": "1kg",
+          "weight": "1kg",
+          "weight_bn": "১ কেজি (১০০০ গ্রাম)",
+          "price": 1850,
+          "original_price": 2650,
+          "savings": 800,
+          "is_default": false
+        }
+      ],
       "benefits": [
         "Boosts Immunity (রোগ প্রতিরোধ ক্ষমতা বৃদ্ধি)",
         "Improves Energy & Stamina (শক্তি ও স্ট্যামিনা বৃদ্ধি)",

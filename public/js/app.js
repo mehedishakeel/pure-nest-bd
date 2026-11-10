@@ -8,15 +8,52 @@
 // WhatsApp Number for Pure Nest BD (Clean international digits)
 const WHATSAPP_NUMBER = '8801355175330';
 
+// Product Variants (250gm, 500gm, 1kg)
+const PRODUCT_VARIANTS = [
+  {
+    id: '250gm',
+    weight: '250gm',
+    weight_bn: '২৫০ গ্রাম',
+    badge: 'ট্রায়াল প্যাক',
+    price: 550,
+    original_price: 850,
+    savings: 300,
+    is_default: false
+  },
+  {
+    id: '500gm',
+    weight: '500gm',
+    weight_bn: '৫০০ গ্রাম',
+    badge: '🔥 সবচেয়ে জনপ্রিয়',
+    price: 1250,
+    original_price: 1750,
+    savings: 500,
+    is_default: true
+  },
+  {
+    id: '1kg',
+    weight: '1kg',
+    weight_bn: '১ কেজি (১০০০ গ্রাম)',
+    badge: '⭐ সেরা সাশ্রয়ী',
+    price: 1850,
+    original_price: 2650,
+    savings: 800,
+    is_default: false
+  }
+];
+
+let selectedVariant = PRODUCT_VARIANTS.find(v => v.is_default) || PRODUCT_VARIANTS[1];
+
 // Default Flagship Product (Loads instantly even without backend)
 const DEFAULT_PRODUCT = {
   id: 1,
   name: 'Yamani Khalta Booster',
   name_bn: 'ইয়ামানি খালতা বুস্টার',
   tagline: 'তিব্বে নববীর অনুপ্রেরণায় প্রাকৃতিক শক্তিবর্ধক',
-  price: 1450,
-  original_price: 2150,
-  image: './images/yamani-khalta-jar.jpg'
+  price: 1250,
+  original_price: 1750,
+  image: './images/yamani-khalta-jar.jpg',
+  variants: PRODUCT_VARIANTS
 };
 
 let currentProduct = { ...DEFAULT_PRODUCT };
@@ -115,6 +152,53 @@ async function loadProductDetails() {
 }
 
 // ──────────────────────────────────────────────
+// Variant Selection & Dynamic Updates
+// ──────────────────────────────────────────────
+function selectVariant(variantId) {
+  const found = PRODUCT_VARIANTS.find(v => v.id === variantId);
+  if (!found) return;
+
+  selectedVariant = found;
+
+  // Update active state on cards
+  document.querySelectorAll('.variant-card').forEach(card => card.classList.remove('active'));
+  const activeCard = document.getElementById(`card-${variantId}`);
+  if (activeCard) activeCard.classList.add('active');
+
+  const radio = document.getElementById(`var-${variantId}`);
+  if (radio) radio.checked = true;
+
+  const hiddenInput = document.getElementById('selectedVariantInput');
+  if (hiddenInput) hiddenInput.value = variantId;
+
+  // Update selected product card displays
+  const selectedPrice = document.getElementById('selectedVariantPrice');
+  if (selectedPrice) {
+    selectedPrice.textContent = `৳ ${found.price.toLocaleString('bn-BD')}`;
+  }
+
+  const selectedOldPrice = document.getElementById('selectedVariantOldPrice');
+  if (selectedOldPrice) {
+    selectedOldPrice.textContent = `৳ ${found.original_price.toLocaleString('bn-BD')}`;
+  }
+
+  const selectedDesc = document.getElementById('selectedProdDesc');
+  if (selectedDesc) {
+    selectedDesc.textContent = `তিব্বে নববীর অনুপ্রেরণায় পুরুষত্বের যত্ন | সাইজ: ${found.weight_bn}`;
+  }
+
+  updateOrderSummary();
+}
+
+function selectVariantAndScroll(variantId) {
+  selectVariant(variantId);
+  const orderSection = document.getElementById('order');
+  if (orderSection) {
+    orderSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// ──────────────────────────────────────────────
 // Update Order Summary & Price Calculation
 // ──────────────────────────────────────────────
 function updateOrderSummary() {
@@ -123,7 +207,7 @@ function updateOrderSummary() {
   const districtSelect = document.getElementById('district');
   const district = districtSelect ? districtSelect.value : '';
 
-  const unitPrice = currentProduct.price || 1450;
+  const unitPrice = selectedVariant.price;
   const totalPrice = unitPrice * quantity;
 
   // Delivery charge: Dhaka, Gazipur, Narayanganj = ৳60, Others = ৳120
@@ -146,7 +230,7 @@ function updateOrderSummary() {
 
   const summaryPrice = document.getElementById('summaryPrice');
   if (summaryPrice) {
-    summaryPrice.textContent = `৳ ${totalPrice.toLocaleString('bn-BD')}`;
+    summaryPrice.textContent = `৳ ${totalPrice.toLocaleString('bn-BD')} (${selectedVariant.weight_bn})`;
   }
 
   const summaryDelivery = document.getElementById('summaryDelivery');
@@ -195,7 +279,7 @@ async function submitOrder(e) {
   submitBtn.innerHTML = '⏳ অর্ডার কনফার্ম ও WhatsApp মেসেজ তৈরি হচ্ছে...';
 
   // Calculate pricing
-  const unitPrice = currentProduct.price || 1450;
+  const unitPrice = selectedVariant.price;
   const totalPrice = unitPrice * quantity;
   const dhakaDistricts = ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ', 'Dhaka', 'Gazipur', 'Narayanganj'];
   const deliveryCharge = dhakaDistricts.includes(district) ? 60 : 120;
@@ -205,15 +289,17 @@ async function submitOrder(e) {
   const randomSuffix = Math.floor(1000 + Math.random() * 9000);
   const orderId = `PN-${Date.now().toString().slice(-4)}${randomSuffix}`;
 
-  // Formulate WhatsApp message with product name, quantity, customer details & shipping address
+  // Formulate WhatsApp message with product name, variant/size, quantity, customer details & shipping address
   const productName = currentProduct.name_bn 
     ? `${currentProduct.name_bn} (${currentProduct.name})` 
     : currentProduct.name;
+  const variantText = `${selectedVariant.weight_bn} (${selectedVariant.weight})`;
 
   const whatsappMessage = 
 `🌿 *নতুন অর্ডার — Pure Nest BD* 🌿
 ━━━━━━━━━━━━━━━━━━━━
 📦 *পণ্যের নাম:* ${productName}
+⚖️ *প্যাক সাইজ / ওজন:* ${variantText}
 🔢 *পরিমাণ:* ${quantity} জার
 💵 *পণ্যের মূল্য:* ৳ ${totalPrice.toLocaleString('bn-BD')}
 🚚 *ডেলিভারি চার্জ:* ৳ ${deliveryCharge.toLocaleString('bn-BD')} (${district})
@@ -236,6 +322,8 @@ async function submitOrder(e) {
     address,
     district,
     product_name: productName,
+    variant: selectedVariant.id,
+    variant_bn: selectedVariant.weight_bn,
     quantity,
     unit_price: unitPrice,
     total_price: totalPrice,
@@ -344,6 +432,7 @@ function showModal(orderData) {
   const safeAddress = escapeHtml(orderData.address);
   const safeDistrict = escapeHtml(orderData.district);
   const safeProduct = escapeHtml(orderData.product_name);
+  const safeVariant = escapeHtml(orderData.variant_bn || '৫০০ গ্রাম');
   const safeQuantity = Number(orderData.quantity) || 1;
   const safePrice = (Number(orderData.total_price) || 0).toLocaleString('bn-BD');
   const safeDelivery = (Number(orderData.delivery_charge) || 0).toLocaleString('bn-BD');
@@ -357,6 +446,7 @@ function showModal(orderData) {
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>মোবাইল নম্বর:</strong> ${safePhone}</p>
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি ঠিকানা:</strong> ${safeAddress}, ${safeDistrict}</p>
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্য:</strong> ${safeProduct}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>প্যাক সাইজ / ওজন:</strong> <span style="color:#1a5632;font-weight:700;">${safeVariant}</span></p>
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পরিমাণ:</strong> ${safeQuantity} জার</p>
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্যের মূল্য:</strong> ৳ ${safePrice}</p>
       <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি চার্জ:</strong> ৳ ${safeDelivery}</p>
