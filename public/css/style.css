@@ -300,13 +300,16 @@ button, input, select, textarea {
   height: 70px;
 }
 
-.brand {
+.brand,
+.nav-brand {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--primary);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .brand .leaf { font-size: 1.5rem; }
@@ -474,11 +477,16 @@ button, input, select, textarea {
   white-space: nowrap;
   font-weight: 600;
   font-size: 0.95rem;
+  width: 100%;
+  max-width: 100vw;
 }
 
-.marquee-inner {
+.marquee-inner,
+.marquee-content {
   display: inline-block;
-  animation: marquee 22s linear infinite;
+  white-space: nowrap;
+  animation: marquee 25s linear infinite;
+  will-change: transform;
 }
 
 @keyframes marquee {
@@ -708,8 +716,9 @@ button, input, select, textarea {
 /* ---------- Reviews Section ---------- */
 .reviews-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 24px;
+  width: 100%;
 }
 
 .review-card {
@@ -799,13 +808,29 @@ button, input, select, textarea {
   background: var(--bg-green-tint);
 }
 
-.order-form-wrap {
+.order-form-wrap,
+.order-form-wrapper {
   max-width: 650px;
   margin: 0 auto;
   background: var(--white);
-  padding: 40px;
+  padding: 36px 32px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(26, 86, 50, 0.12);
+  width: 100%;
+}
+
+.price-display {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  background: #f0f7f3;
+  border: 2px solid #c8e4d2;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 .form-group {
@@ -870,25 +895,39 @@ button, input, select, textarea {
 }
 
 .order-summary {
-  background: var(--bg-green-tint);
+  background: #f4fbf7;
+  border: 1px solid #cce8d7;
   padding: 20px;
   border-radius: var(--radius-sm);
   margin-bottom: 24px;
 }
 
+.order-summary h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d8ede1;
+}
+
+.summary-row,
 .order-summary .line {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
+  align-items: center;
+  padding: 7px 0;
   font-size: 0.95rem;
+  gap: 12px;
 }
 
+.summary-row.summary-total,
 .order-summary .line.total {
   border-top: 2px solid var(--primary);
   margin-top: 8px;
   padding-top: 12px;
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   color: var(--primary);
 }
 
@@ -1474,145 +1513,6 @@ a.contact-row:hover {
   transform: translateY(0);
 }
 
-/* ---------- Responsive: Tablet ---------- */
-@media (max-width: 992px) {
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero h1 { font-size: 2.4rem; }
-}
-
-/* ---------- Responsive: Mobile Navigation ---------- */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex !important;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 32px;
-    height: 28px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    z-index: 1002;
-  }
-
-  .hamburger span {
-    width: 28px;
-    height: 3px;
-    background: var(--primary);
-    border-radius: 4px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hamburger.active span:nth-child(1),
-  .hamburger.open span:nth-child(1) {
-    transform: translateY(9px) rotate(45deg);
-  }
-
-  .hamburger.active span:nth-child(2),
-  .hamburger.open span:nth-child(2) {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-
-  .hamburger.active span:nth-child(3),
-  .hamburger.open span:nth-child(3) {
-    transform: translateY(-9px) rotate(-45deg);
-  }
-
-  .nav-links {
-    position: fixed !important;
-    top: 0 !important;
-    right: 0 !important;
-    width: 82% !important;
-    max-width: 320px !important;
-    height: 100vh !important;
-    background: #ffffff !important;
-    box-shadow: -8px 0 35px rgba(0, 0, 0, 0.22) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 22px !important;
-    padding: 40px 24px !important;
-    transform: translateX(100%) !important;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    z-index: 1001 !important;
-  }
-
-  .nav-links.active,
-  .nav-links.open {
-    transform: translateX(0) !important;
-  }
-
-  .nav-links a {
-    font-size: 1.18rem !important;
-    font-weight: 700 !important;
-    color: var(--text) !important;
-    padding: 12px 20px !important;
-    width: 100% !important;
-    text-align: center !important;
-    border-radius: 10px !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .nav-links a:hover {
-    background: #edf6f0 !important;
-    color: var(--primary) !important;
-  }
-
-  body.mobile-nav-open {
-    overflow: hidden !important;
-  }
-
-  .hero { min-height: auto; padding: 120px 20px 80px; }
-  .hero h1 { font-size: 1.9rem; }
-  .hero p { font-size: 1rem; }
-  .trust-badges { gap: 12px; }
-  .trust-badges .badge { font-size: 0.82rem; padding: 8px 14px; }
-
-  .section { padding: 50px 0; }
-  .section-title h2 { font-size: 1.6rem; }
-
-  .product-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .order-form-wrap { padding: 24px; }
-  .form-row { grid-template-columns: 1fr; }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .review-card { min-width: 280px; }
-
-  .tracking-input-group { flex-direction: column; }
-}
-
-@media (max-width: 480px) {
-  .hero h1 { font-size: 1.6rem; }
-  .hero-cta { padding: 14px 32px; font-size: 1rem; }
-  .modal { padding: 28px 20px; }
-}
-
 /* ============================================================
    Enhanced Hero & Spotlight Section Styles (Image Integration)
    ============================================================ */
@@ -1957,53 +1857,6 @@ a.contact-row:hover {
   font-weight: 600;
 }
 
-/* Responsive updates for new elements */
-@media (max-width: 992px) {
-  .hero-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 36px;
-  }
-
-  .hero-content {
-    text-align: center;
-  }
-
-  .hero-subtitle {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-price-banner {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .hero .trust-badges {
-    justify-content: center;
-  }
-
-  .spotlight-card {
-    grid-template-columns: 1fr;
-  }
-
-  .spotlight-poster {
-    min-height: 340px;
-  }
-
-  .spotlight-info {
-    padding: 30px 24px;
-  }
-
-  .benefits-list {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Selected Product Summary Card in Order Form */
 .selected-product-card {
   display: flex;
@@ -2130,5 +1983,686 @@ a.contact-row:hover {
   background: #e4e7eb;
   color: #2f3542;
 }
+
+/* ============================================================
+   Pure Nest BD — Master Responsive & Mobile Optimization System
+   Zero Overlapping, Zero Breaking, Perfect Compact & Fluid Layout
+   ============================================================ */
+
+/* Global Mobile Hardening */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile Nav Drawer Backdrop */
+body.mobile-nav-open::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+/* ---------- 1. TABLET BREAKPOINT (max-width: 992px) ---------- */
+@media (max-width: 992px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 36px;
+    padding: 30px 16px;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 620px;
+  }
+
+  .hero-price-banner {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero .trust-badges {
+    justify-content: center;
+  }
+
+  .spotlight-card {
+    grid-template-columns: 1fr;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  .spotlight-poster {
+    min-height: 320px;
+    padding: 28px 20px;
+  }
+
+  .spotlight-info {
+    padding: 32px 28px;
+    text-align: center;
+  }
+
+  .benefits-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .spotlight-cta {
+    justify-content: center;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .footer-card-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-strip-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .footer-bottom-flex {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
+/* ---------- 2. MOBILE LANDSCAPE & PHABLET (max-width: 768px) ---------- */
+@media (max-width: 768px) {
+  .navbar .container,
+  .nav-container {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .nav-brand,
+  .brand {
+    font-size: 1.25rem;
+  }
+
+  .hamburger {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 32px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002;
+  }
+
+  .hamburger span {
+    width: 28px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hamburger.active span:nth-child(1),
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(2),
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+
+  .hamburger.active span:nth-child(3),
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  .nav-links {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 82% !important;
+    max-width: 320px !important;
+    height: 100vh !important;
+    background: #ffffff !important;
+    box-shadow: -8px 0 35px rgba(0, 0, 0, 0.25) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 18px !important;
+    padding: 40px 24px !important;
+    transform: translateX(100%) !important;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1001 !important;
+  }
+
+  .nav-links.active,
+  .nav-links.open {
+    transform: translateX(0) !important;
+  }
+
+  .nav-links a {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    padding: 12px 20px !important;
+    width: 100% !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 85px 14px 40px;
+  }
+
+  .hero-container {
+    padding: 10px 0;
+    gap: 30px;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+    line-height: 1.28;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .section {
+    padding: 50px 0;
+  }
+
+  .section-header {
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+    line-height: 1.3;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .feature-card {
+    padding: 24px 18px;
+  }
+
+  .benefits-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reviews-container {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .review-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 20px 18px;
+  }
+
+  .order-form-wrapper,
+  .order-form-wrap {
+    padding: 26px 18px;
+    border-radius: 14px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* ---------- 3. COMPACT MOBILE (max-width: 576px) ---------- */
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 1.85rem;
+    line-height: 1.3;
+  }
+
+  .hero-price-banner {
+    width: 100%;
+    max-width: 330px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 10px 14px;
+    margin: 0 auto 22px;
+  }
+
+  .hero-price-current {
+    font-size: 1.45rem;
+  }
+
+  .hero-price-old {
+    font-size: 0.95rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .hero-image-wrapper {
+    padding: 16px 12px;
+    max-width: 280px;
+    width: 100%;
+  }
+
+  .hero-product-img {
+    max-width: 240px;
+  }
+
+  .spotlight-poster {
+    min-height: 240px;
+    padding: 20px 14px;
+  }
+
+  .spotlight-img {
+    max-width: 230px;
+    max-height: 280px;
+  }
+
+  .footer-strip-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .strip-item {
+    padding: 12px 14px;
+  }
+
+  .whatsapp-float {
+    bottom: 18px;
+    right: 18px;
+    width: 52px;
+    height: 52px;
+    font-size: 1.55rem;
+  }
+}
+
+/* ---------- 4. STANDARD SMARTPHONE (max-width: 480px) ---------- */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .navbar .container,
+  .nav-container {
+    height: 58px;
+    padding: 0 12px;
+  }
+
+  .nav-brand,
+  .brand {
+    font-size: 1.15rem;
+  }
+
+  .hamburger {
+    width: 28px;
+    height: 24px;
+  }
+
+  .hamburger span {
+    width: 24px;
+    height: 2.5px;
+  }
+
+  .hero {
+    padding: 78px 10px 28px;
+  }
+
+  .hero-tag {
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    line-height: 1.32;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .trust-badges {
+    gap: 8px;
+  }
+
+  .trust-badges .badge {
+    font-size: 0.76rem;
+    padding: 6px 10px;
+  }
+
+  .section {
+    padding: 38px 0;
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  .section-badge {
+    font-size: 0.76rem;
+    padding: 4px 12px;
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+    line-height: 1.35;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .spotlight-card {
+    border-radius: 14px;
+  }
+
+  .spotlight-poster {
+    min-height: 200px;
+    padding: 16px 10px;
+  }
+
+  .spotlight-img {
+    max-width: 200px;
+    max-height: 240px;
+  }
+
+  .spotlight-info {
+    padding: 20px 14px;
+    text-align: center;
+  }
+
+  .spotlight-title {
+    font-size: 1.45rem;
+    margin-bottom: 4px;
+  }
+
+  .spotlight-subtitle {
+    font-size: 0.88rem;
+    margin-bottom: 18px;
+  }
+
+  .product-highlight-price {
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .ph-current {
+    font-size: 1.55rem;
+  }
+
+  .ph-original {
+    font-size: 1.05rem;
+  }
+
+  .benefit-item {
+    padding: 10px 12px;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .b-icon {
+    font-size: 1.3rem;
+  }
+
+  .benefit-item h4 {
+    font-size: 0.88rem;
+  }
+
+  .benefit-item p {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .spotlight-cta {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .spotlight-cta .btn {
+    width: 100%;
+    font-size: 0.96rem;
+    padding: 12px 18px;
+    white-space: normal;
+  }
+
+  .free-gift-text {
+    font-size: 0.82rem;
+  }
+
+  .selected-product-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 14px 10px;
+  }
+
+  .selected-prod-img {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto;
+  }
+
+  .selected-prod-info h4 {
+    font-size: 0.98rem;
+    line-height: 1.35;
+  }
+
+  .selected-prod-desc {
+    font-size: 0.8rem;
+  }
+
+  .selected-prod-price {
+    font-size: 0.9rem;
+  }
+
+  .selected-prod-price strong {
+    font-size: 1.1rem;
+  }
+
+  .order-form-wrapper,
+  .order-form-wrap {
+    padding: 18px 12px;
+    border-radius: 12px;
+  }
+
+  .form-group label {
+    font-size: 0.88rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    font-size: 0.94rem;
+  }
+
+  .price-display {
+    height: 44px;
+    font-size: 1.15rem;
+    padding: 0 12px;
+  }
+
+  .order-summary {
+    padding: 14px 12px;
+    border-radius: 10px;
+  }
+
+  .order-summary h4 {
+    font-size: 0.98rem;
+  }
+
+  .summary-row,
+  .order-summary .line {
+    font-size: 0.86rem;
+    padding: 5px 0;
+  }
+
+  .summary-row.summary-total,
+  .order-summary .line.total {
+    font-size: 1.05rem;
+    padding-top: 10px;
+  }
+
+  #submitBtn,
+  .btn-submit {
+    padding: 13px 16px;
+    font-size: 0.98rem;
+    white-space: normal;
+  }
+
+  .form-note {
+    font-size: 0.78rem;
+    padding: 8px 10px;
+    line-height: 1.45;
+  }
+
+  .footer-box {
+    padding: 20px 14px;
+    border-radius: 14px;
+  }
+
+  .footer-box-header {
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .f-box-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 1.15rem;
+  }
+
+  .f-box-title {
+    font-size: 1.05rem;
+  }
+
+  .footer-desc {
+    font-size: 0.86rem;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .contact-row {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .contact-row strong {
+    font-size: 0.86rem;
+    word-break: break-word;
+  }
+
+  .footer-domain-pill {
+    font-size: 0.82rem;
+    padding: 8px 14px;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal {
+    padding: 20px 12px;
+    border-radius: 14px;
+    max-width: 96%;
+  }
+
+  .modal h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-message {
+    font-size: 0.86rem;
+  }
+
+  .btn-whatsapp-order {
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    white-space: normal;
+  }
+}
+
+/* ---------- 5. ULTRA-COMPACT / FOLD SCREENS (max-width: 360px) ---------- */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 1.42rem;
+  }
+
+  .hero-price-current {
+    font-size: 1.28rem;
+  }
+
+  .hero-product-img {
+    max-width: 190px;
+  }
+
+  .nav-brand,
+  .brand {
+    font-size: 1.02rem;
+  }
+
+  .nav-links {
+    width: 90% !important;
+    padding: 30px 16px !important;
+  }
+}
+
 
 
