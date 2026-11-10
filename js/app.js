@@ -299,6 +299,19 @@ async function submitOrder(e) {
 }
 
 // ──────────────────────────────────────────────
+// HTML Escaping Utility for XSS Prevention
+// ──────────────────────────────────────────────
+function escapeHtml(str) {
+  if (typeof str !== 'string') return str == null ? '' : String(str);
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ──────────────────────────────────────────────
 // Form Error Display
 // ──────────────────────────────────────────────
 function showFormError(message) {
@@ -308,7 +321,7 @@ function showFormError(message) {
   const errorDiv = document.createElement('div');
   errorDiv.className = 'form-error';
   errorDiv.style.display = 'block';
-  errorDiv.innerHTML = '⚠️ ' + message;
+  errorDiv.textContent = '⚠️ ' + message;
 
   const form = document.getElementById('orderForm');
   form.insertBefore(errorDiv, form.firstChild);
@@ -325,22 +338,34 @@ function showFormError(message) {
 // ──────────────────────────────────────────────
 function showModal(orderData) {
   const detailsDiv = document.getElementById('modalOrderDetails');
+  const safeOrderId = escapeHtml(orderData.order_id);
+  const safeName = escapeHtml(orderData.customer_name);
+  const safePhone = escapeHtml(orderData.phone);
+  const safeAddress = escapeHtml(orderData.address);
+  const safeDistrict = escapeHtml(orderData.district);
+  const safeProduct = escapeHtml(orderData.product_name);
+  const safeQuantity = Number(orderData.quantity) || 1;
+  const safePrice = (Number(orderData.total_price) || 0).toLocaleString('bn-BD');
+  const safeDelivery = (Number(orderData.delivery_charge) || 0).toLocaleString('bn-BD');
+  const safeGrandTotal = (Number(orderData.grand_total) || 0).toLocaleString('bn-BD');
+  const safeWaUrl = encodeURI(orderData.whatsapp_url);
+
   detailsDiv.innerHTML = `
     <div style="background:#f4fbf7;border:1px solid #c3e6cb;border-radius:12px;padding:16px;margin:16px 0;text-align:left;">
-      <p style="margin:0 0 8px;font-size:0.95rem;"><strong>অর্ডার ট্র্যাকিং আইডি:</strong> <span style="color:#1a5632;font-weight:700;">${orderData.order_id}</span></p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>গ্রাহকের নাম:</strong> ${orderData.customer_name}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>মোবাইল নম্বর:</strong> ${orderData.phone}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি ঠিকানা:</strong> ${orderData.address}, ${orderData.district}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্য:</strong> ${orderData.product_name}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পরিমাণ:</strong> ${orderData.quantity} জার</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্যের মূল্য:</strong> ৳ ${orderData.total_price.toLocaleString('bn-BD')}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি চার্জ:</strong> ৳ ${orderData.delivery_charge.toLocaleString('bn-BD')}</p>
-      <p style="margin:0 0 8px;font-size:1.1rem;color:#1a5632;"><strong>সর্বমোট প্রদেয়:</strong> ৳ ${orderData.grand_total.toLocaleString('bn-BD')}</p>
+      <p style="margin:0 0 8px;font-size:0.95rem;"><strong>অর্ডার ট্র্যাকিং আইডি:</strong> <span style="color:#1a5632;font-weight:700;">${safeOrderId}</span></p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>গ্রাহকের নাম:</strong> ${safeName}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>মোবাইল নম্বর:</strong> ${safePhone}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি ঠিকানা:</strong> ${safeAddress}, ${safeDistrict}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্য:</strong> ${safeProduct}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পরিমাণ:</strong> ${safeQuantity} জার</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্যের মূল্য:</strong> ৳ ${safePrice}</p>
+      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি চার্জ:</strong> ৳ ${safeDelivery}</p>
+      <p style="margin:0 0 8px;font-size:1.1rem;color:#1a5632;"><strong>সর্বমোট প্রদেয়:</strong> ৳ ${safeGrandTotal}</p>
       <p style="margin:0;font-size:0.85rem;color:#27ae60;">✓ ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)</p>
     </div>
 
     <div>
-      <a href="${orderData.whatsapp_url}" target="_blank" class="btn-whatsapp-order">
+      <a href="${safeWaUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-order">
         <span>💬</span> WhatsApp-এ মেসেজ পাঠান ও নিশ্চিত করুন
       </a>
       <p style="font-size:0.83rem;color:#666;margin:4px 0 14px;">(WhatsApp স্বয়ংক্রিয়ভাবে ওপেন না হলে ওপরের বাটনে ক্লিক করুন)</p>
@@ -391,22 +416,25 @@ function renderReviews(reviews, container) {
   }
 
   container.innerHTML = reviews.map(review => {
-    const stars = '★'.repeat(review.rating) + '☆'.repeat(Math.max(0, 5 - review.rating));
-    const initial = review.customer_name ? review.customer_name.trim().charAt(0) : 'প';
-    const location = review.location ? `📍 ${review.location}` : '📍 বাংলাদেশ';
+    const numericRating = Math.min(5, Math.max(1, parseInt(review.rating, 10) || 5));
+    const stars = '★'.repeat(numericRating) + '☆'.repeat(5 - numericRating);
+    const safeName = escapeHtml(review.customer_name);
+    const initial = safeName ? safeName.trim().charAt(0) : 'প';
+    const safeLoc = review.location ? `📍 ${escapeHtml(review.location)}` : '📍 বাংলাদেশ';
+    const safeComment = escapeHtml(review.comment);
 
     return `
       <div class="review-card fade-in">
         <div class="review-header">
           <div class="review-avatar">${initial}</div>
           <div class="review-meta">
-            <h4 class="reviewer-name">${review.customer_name}</h4>
-            <span class="reviewer-loc">${location}</span>
+            <h4 class="reviewer-name">${safeName}</h4>
+            <span class="reviewer-loc">${safeLoc}</span>
           </div>
           <span class="verified-badge">✓ ভেরিফায়েড ক্রেতা</span>
         </div>
         <div class="review-stars">${stars}</div>
-        <p class="review-comment">"${review.comment}"</p>
+        <p class="review-comment">"${safeComment}"</p>
       </div>
     `;
   }).join('');

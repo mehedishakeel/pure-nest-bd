@@ -11,10 +11,21 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// --------------- Security & Headers ---------------
+app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 // --------------- Middleware ---------------
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // Serve static assets from public folder or project root (GitHub Pages compatibility)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -166,28 +177,41 @@ app.post('/api/orders', (req, res) => {
       });
     }
 
+    const cleanName = String(customer_name).trim().slice(0, 100);
+    const cleanPhone = String(phone).trim().slice(0, 20);
+    const cleanAddress = String(address).trim().slice(0, 500);
+    const cleanDistrict = String(district).trim().slice(0, 50);
+
+    const phoneRegex = /^01[3-9]\d{8}$/;
+    if (!phoneRegex.test(cleanPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: 'অনুগ্রহ করে সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর দিন।'
+      });
+    }
+
     const db = readDb();
     const product = (db.products || []).find(p => p.id === parseInt(product_id, 10));
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found.' });
     }
 
-    const qty = parseInt(quantity, 10) || 1;
+    const qty = Math.min(20, Math.max(1, parseInt(quantity, 10) || 1));
     const total_price = product.price * qty;
 
     // Delivery charge: Dhaka area = ৳60, Outside = ৳120
     const dhakaDistricts = ['ঢাকা', 'গাজীপুর', 'নারায়ণগঞ্জ', 'Dhaka', 'Gazipur', 'Narayanganj'];
-    const delivery_charge = dhakaDistricts.includes(district) ? 60 : 120;
+    const delivery_charge = dhakaDistricts.includes(cleanDistrict) ? 60 : 120;
     const grand_total = total_price + delivery_charge;
 
     const order_id = 'PN-' + Date.now();
     const newOrder = {
       id: (db.orders && db.orders.length > 0) ? Math.max(...db.orders.map(o => o.id || 0)) + 1 : 1,
       order_id,
-      customer_name: customer_name.trim(),
-      phone: phone.trim(),
-      address: address.trim(),
-      district: district.trim(),
+      customer_name: cleanName,
+      phone: cleanPhone,
+      address: cleanAddress,
+      district: cleanDistrict,
       product_id: product.id,
       product_name: product.name,
       product_name_bn: product.name_bn,
@@ -264,12 +288,15 @@ app.post('/api/reviews', (req, res) => {
       });
     }
 
+    const cleanName = String(customer_name).trim().slice(0, 100);
+    const cleanComment = String(comment).trim().slice(0, 1000);
+
     const db = readDb();
     const newReview = {
       id: (db.reviews && db.reviews.length > 0) ? Math.max(...db.reviews.map(r => r.id || 0)) + 1 : 1,
-      customer_name: customer_name.trim(),
+      customer_name: cleanName,
       rating: numericRating,
-      comment: comment.trim(),
+      comment: cleanComment,
       product_id: product_id ? parseInt(product_id, 10) : null,
       created_at: new Date().toISOString()
     };
