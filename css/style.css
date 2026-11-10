@@ -2268,7 +2268,13 @@ body.mobile-nav-open::after {
     transform: translateX(0) !important;
   }
 
+  .nav-links li {
+    width: 100% !important;
+    list-style: none !important;
+  }
+
   .nav-links a {
+    display: block !important;
     font-size: 1.12rem !important;
     font-weight: 700 !important;
     color: var(--text) !important;
@@ -2279,6 +2285,10 @@ body.mobile-nav-open::after {
     background: #f8faf9;
     border: 1px solid rgba(0, 0, 0, 0.05);
     transition: background var(--transition), color var(--transition);
+  }
+
+  .nav-links a::after {
+    display: none !important;
   }
 
   .nav-links a:hover,
