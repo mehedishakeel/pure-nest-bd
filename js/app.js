@@ -373,7 +373,13 @@ function showModal(orderData) {
     </div>
   `;
 
-  document.getElementById('modalOverlay').style.display = 'flex';
+  const modalOverlay = document.getElementById('modalOverlay');
+  if (modalOverlay) {
+    modalOverlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      modalOverlay.classList.add('show');
+    });
+  }
   document.body.style.overflow = 'hidden';
 }
 
@@ -381,7 +387,15 @@ function closeModal(e) {
   if (e && e.target !== e.currentTarget && !e.target.classList.contains('btn-modal-dismiss') && !e.target.classList.contains('modal-close')) {
     return;
   }
-  document.getElementById('modalOverlay').style.display = 'none';
+  const modalOverlay = document.getElementById('modalOverlay');
+  if (modalOverlay) {
+    modalOverlay.classList.remove('show');
+    setTimeout(() => {
+      if (!modalOverlay.classList.contains('show')) {
+        modalOverlay.style.display = 'none';
+      }
+    }, 280);
+  }
   document.body.style.overflow = '';
 }
 
@@ -458,6 +472,7 @@ function toggleMobileMenu() {
   } else {
     navLinks.classList.add('active', 'open');
     hamburger.classList.add('active', 'open');
+    hamburger.setAttribute('aria-expanded', 'true');
     document.body.classList.add('mobile-nav-open');
   }
 }
@@ -469,6 +484,7 @@ function closeMobileMenu() {
 
   navLinks.classList.remove('active', 'open');
   hamburger.classList.remove('active', 'open');
+  hamburger.setAttribute('aria-expanded', 'false');
   document.body.classList.remove('mobile-nav-open');
 }
 

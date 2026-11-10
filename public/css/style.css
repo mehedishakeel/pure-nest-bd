@@ -11,6 +11,7 @@
   --accent-hover: #c49a35;
   --bg: #f8faf9;
   --bg-green-tint: #eef5f0;
+  --bg-alt: #f4fbf7;
   --text: #2d3436;
   --text-light: #636e72;
   --white: #ffffff;
@@ -33,7 +34,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 110px;
 }
 
 body {
@@ -284,6 +285,7 @@ button, input, select, textarea {
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.04);
   transition: var(--transition);
+  isolation: isolate;
 }
 
 .navbar.scrolled {
@@ -345,21 +347,6 @@ body.mobile-nav-open .navbar {
 .nav-links a:hover { color: var(--primary); }
 .nav-links a:hover::after { width: 100%; }
 
-.nav-cta {
-  background: var(--accent) !important;
-  color: var(--white) !important;
-  padding: 10px 24px;
-  border-radius: 50px;
-  font-weight: 600 !important;
-  transition: background var(--transition), transform var(--transition) !important;
-}
-
-.nav-cta::after { display: none !important; }
-.nav-cta:hover {
-  background: var(--accent-hover) !important;
-  transform: translateY(-1px);
-}
-
 /* Hamburger */
 .hamburger {
   display: none;
@@ -413,7 +400,7 @@ body.mobile-nav-open .navbar {
   background: linear-gradient(135deg, #0f3d22 0%, #1a5632 30%, #2d8a56 60%, #1a5632 100%);
   position: relative;
   overflow: hidden;
-  padding: 100px 20px 60px;
+  padding: 60px 20px 60px;
 }
 
 .hero::before {
@@ -501,6 +488,7 @@ body.mobile-nav-open .navbar {
   font-size: 0.95rem;
   width: 100%;
   max-width: 100vw;
+  margin-top: 70px; /* accounts for fixed navbar height */
 }
 
 .marquee-inner,
@@ -514,11 +502,6 @@ body.mobile-nav-open .navbar {
 @keyframes marquee {
   0% { transform: translateX(100vw); }
   100% { transform: translateX(-100%); }
-}
-
-/* ---------- Section Common ---------- */
-.section {
-  padding: 80px 0;
 }
 
 /* ---------- Section Common & Professional Headers ---------- */
@@ -1443,6 +1426,7 @@ a.contact-row:hover {
   transition: transform 0.3s;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
 }
 
 .modal-overlay.show .modal {
@@ -1682,22 +1666,6 @@ a.contact-row:hover {
   flex-wrap: wrap;
 }
 
-.btn-outline {
-  background: transparent;
-  color: var(--white);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.btn-outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: var(--white);
-  color: var(--white);
-}
-
 .hero .trust-badges {
   justify-content: flex-start;
   margin-top: 0;
@@ -1729,6 +1697,7 @@ a.contact-row:hover {
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   animation: heroFloatJar 6s ease-in-out infinite;
   object-fit: cover;
+  will-change: transform;
 }
 
 @keyframes heroFloatJar {
@@ -2186,6 +2155,14 @@ body.mobile-nav-open::after {
 
 /* ---------- 2. MOBILE LANDSCAPE & PHABLET (max-width: 768px) ---------- */
 @media (max-width: 768px) {
+  html {
+    scroll-padding-top: 104px;
+  }
+
+  .marquee-bar {
+    margin-top: 64px;
+  }
+
   .navbar .container,
   .nav-container {
     height: 64px;
@@ -2261,6 +2238,7 @@ body.mobile-nav-open::after {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     z-index: 1015 !important;
     overflow-y: auto !important;
+    isolation: isolate;
   }
 
   .nav-links.active,
@@ -2299,7 +2277,7 @@ body.mobile-nav-open::after {
 
   .hero {
     min-height: auto;
-    padding: 82px 14px 35px;
+    padding: 38px 14px 35px;
   }
 
   .hero-container {
@@ -2492,8 +2470,16 @@ body.mobile-nav-open::after {
     height: 3px;
   }
 
+  html {
+    scroll-padding-top: 98px;
+  }
+
+  .marquee-bar {
+    margin-top: 58px;
+  }
+
   .hero {
-    padding: 72px 10px 24px;
+    padding: 30px 10px 24px;
   }
 
   .hero-tag {
@@ -2866,3 +2852,109 @@ body.mobile-nav-open::after {
 
 
 
+
+/* ============================================================
+   Missing Section & UI Classes (Bug Fixes)
+   ============================================================ */
+
+/* Section variant backgrounds */
+.section-alt {
+  background: #f0f7f3;
+}
+
+.section-order {
+  background: linear-gradient(180deg, #eef5f0 0%, #f8faf9 100%);
+}
+
+/* Feature icon (used in feature-card in HTML) */
+.feature-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+}
+
+/* Loading spinner wrapper (used in HTML as .loading-spinner) */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+}
+
+/* Form hint below inputs */
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 4px;
+  display: block;
+}
+
+/* Form error message block */
+.form-error {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.92rem;
+  display: none;
+}
+
+/* Modal icon (success checkmark emoji container) */
+.modal-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+/* Modal message paragraph */
+.modal-message {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+
+/* Modal close × button */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--text-light);
+  line-height: 1;
+}
+
+/* Modal details container */
+.modal-details {
+  text-align: left;
+  margin: 8px 0 16px;
+}
+
+/* ============================================================
+   Focus Visible Accessibility Styles
+   ============================================================ */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Prefers Reduced Motion Support
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .hero-product-img { animation: none !important; }
+  .marquee-content { animation-duration: 0.01ms !important; }
+  @keyframes ctaPulseGlow { 0%, 100% { box-shadow: 0 4px 18px rgba(212, 144, 10, 0.4); transform: none; } }
+}
