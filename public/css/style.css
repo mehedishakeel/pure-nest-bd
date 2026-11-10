@@ -427,7 +427,7 @@ body.mobile-nav-open .navbar {
 }
 
 .hero h1 span {
-  color: var(--accent);
+  color: var(--white);
 }
 
 .hero p {
@@ -1593,22 +1593,24 @@ a.contact-row:hover {
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
+.hero-title .hero-prod-name,
 .hero-prod-name {
   display: block;
   font-size: 2.85rem;
   font-weight: 800;
-  color: #ffd03b;
+  color: #ffffff !important;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
   margin-bottom: 4px;
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
 
+.hero-title .hero-prod-tagline,
 .hero-prod-tagline {
   display: block;
   font-size: 1.65rem;
   font-weight: 700;
-  color: var(--white);
+  color: #ffffff !important;
   line-height: 1.35;
 }
 
