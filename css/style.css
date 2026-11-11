@@ -1949,31 +1949,158 @@ a.contact-row:hover {
   font-weight: 700;
 }
 
-/* WhatsApp Order Button in Modal */
-.btn-whatsapp-order {
+/* ============================================================
+   Modal Dual Order Action (WhatsApp & IMO Options)
+   ============================================================ */
+.modal-channel-section {
+  margin: 16px 0 10px;
+}
+
+.modal-channel-title {
+  font-weight: 700;
+  color: #1a5632;
+  font-size: 0.96rem;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.modal-channel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.btn-channel-order {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: linear-gradient(135deg, #25D366, #128C7E);
+  padding: 12px 14px;
+  border-radius: 14px;
   color: #ffffff !important;
-  font-size: 1.05rem;
-  font-weight: 700;
-  padding: 14px 24px;
-  border-radius: 50px;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
-  transition: all 0.25s ease;
-  margin: 14px 0 8px;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   width: 100%;
+}
+
+.btn-whatsapp-order {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
 }
 
 .btn-whatsapp-order:hover {
   background: linear-gradient(135deg, #20ba5a, #0d7065);
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(37, 211, 102, 0.55);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55);
+  color: #ffffff !important;
+}
+
+.btn-imo-order {
+  background: linear-gradient(135deg, #0288d1, #01579b);
+  box-shadow: 0 4px 16px rgba(2, 136, 209, 0.4);
+}
+
+.btn-imo-order:hover {
+  background: linear-gradient(135deg, #039be5, #0277bd);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 136, 209, 0.55);
+  color: #ffffff !important;
+}
+
+.channel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.channel-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.channel-text strong {
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.channel-text small {
+  font-size: 0.74rem;
+  opacity: 0.92;
+  font-weight: 500;
+  margin-top: 2px;
+  color: #e8f5e9;
+}
+
+.btn-imo-order .channel-text small {
+  color: #e1f5fe;
+}
+
+/* IMO Feedback Box */
+.imo-feedback-box {
+  background: #f0f9ff;
+  border: 1.5px solid #7dd3fc;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  text-align: left;
+  animation: fadeIn 0.3s ease;
+}
+
+.imo-feedback-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.imo-check-badge {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.imo-feedback-status strong {
+  font-size: 0.92rem;
+  color: #0369a1;
+  display: block;
+}
+
+.imo-feedback-status p {
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+  color: #075985;
+  line-height: 1.4;
+}
+
+.imo-feedback-actions {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #bae6fd;
+}
+
+.btn-imo-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0288d1;
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-imo-call:hover {
+  background: #0277bd;
+  transform: translateY(-1px);
   color: #ffffff !important;
 }
 
@@ -2809,7 +2936,12 @@ body.mobile-nav-open::after {
     font-size: 0.86rem;
   }
 
-  .btn-whatsapp-order {
+  .modal-channel-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .btn-channel-order {
     padding: 12px 14px;
     font-size: 0.92rem;
     white-space: normal;
