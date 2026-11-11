@@ -372,13 +372,58 @@ async function submitOrder(e) {
   // 3. Reset form
   document.getElementById('orderForm').reset();
   document.getElementById('quantity').value = 1;
+  // Re-sync channel UI
+  selectOrderChannel(currentOrderChannel);
   updateOrderSummary();
 
-  // 4. Show success modal with order details and choices for WhatsApp & IMO
-  showModal(orderData);
+  // 4. Show modal tailored to the selected channel (WhatsApp or IMO)
+  const selectedChannel = currentOrderChannel || 'whatsapp';
+  orderData.channel = selectedChannel;
+  showOrderModal(orderData, selectedChannel);
 
   submitBtn.disabled = false;
   submitBtn.innerHTML = originalText;
+}
+
+// ──────────────────────────────────────────────
+// Channel Selection Handler (WhatsApp vs IMO)
+// ──────────────────────────────────────────────
+let currentOrderChannel = 'whatsapp';
+
+function selectOrderChannel(channel) {
+  currentOrderChannel = channel;
+  const cardWa = document.getElementById('channelCardWa');
+  const cardImo = document.getElementById('channelCardImo');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitBtnIcon = document.getElementById('submitBtnIcon');
+  const submitBtnText = document.getElementById('submitBtnText');
+
+  const radioWa = cardWa ? cardWa.querySelector('input[type="radio"]') : null;
+  const radioImo = cardImo ? cardImo.querySelector('input[type="radio"]') : null;
+
+  if (channel === 'imo') {
+    if (cardWa) cardWa.classList.remove('active');
+    if (cardImo) cardImo.classList.add('active');
+    if (radioWa) radioWa.checked = false;
+    if (radioImo) radioImo.checked = true;
+
+    if (submitBtn) {
+      submitBtn.className = 'btn btn-full btn-channel-submit btn-submit-imo';
+    }
+    if (submitBtnIcon) submitBtnIcon.textContent = '📱';
+    if (submitBtnText) submitBtnText.textContent = 'IMO-তে মেসেজ পাঠিয়ে অর্ডার কনফার্ম করুন';
+  } else {
+    if (cardImo) cardImo.classList.remove('active');
+    if (cardWa) cardWa.classList.add('active');
+    if (radioImo) radioImo.checked = false;
+    if (radioWa) radioWa.checked = true;
+
+    if (submitBtn) {
+      submitBtn.className = 'btn btn-full btn-channel-submit btn-submit-whatsapp';
+    }
+    if (submitBtnIcon) submitBtnIcon.textContent = '💬';
+    if (submitBtnText) submitBtnText.textContent = 'WhatsApp-এ মেসেজ পাঠিয়ে অর্ডার কনফার্ম করুন';
+  }
 }
 
 // ──────────────────────────────────────────────
@@ -417,11 +462,11 @@ function showFormError(message) {
 }
 
 // ──────────────────────────────────────────────
-// Success Modal with WhatsApp and IMO Options
+// Order Modal Tailored to WhatsApp or IMO
 // ──────────────────────────────────────────────
 let lastOrderMessage = '';
 
-function showModal(orderData) {
+function showOrderModal(orderData, channel) {
   const detailsDiv = document.getElementById('modalOrderDetails');
   const safeOrderId = escapeHtml(orderData.order_id);
   const safeName = escapeHtml(orderData.customer_name);
@@ -436,72 +481,100 @@ function showModal(orderData) {
   const safeGrandTotal = (Number(orderData.grand_total) || 0).toLocaleString('bn-BD');
   const safeWaUrl = encodeURI(orderData.whatsapp_url);
 
-  // Store order message globally for IMO button handler
+  // Store order message globally
   lastOrderMessage = orderData.order_message || '';
 
-  detailsDiv.innerHTML = `
-    <div style="background:#f4fbf7;border:1px solid #c3e6cb;border-radius:12px;padding:16px;margin:16px 0;text-align:left;">
-      <p style="margin:0 0 8px;font-size:0.95rem;"><strong>অর্ডার ট্র্যাকিং আইডি:</strong> <span style="color:#1a5632;font-weight:700;">${safeOrderId}</span></p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>গ্রাহকের নাম:</strong> ${safeName}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>মোবাইল নম্বর:</strong> ${safePhone}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি ঠিকানা:</strong> ${safeAddress}, ${safeDistrict}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্য:</strong> ${safeProduct}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>প্যাক সাইজ / ওজন:</strong> <span style="color:#1a5632;font-weight:700;">${safeVariant}</span></p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পরিমাণ:</strong> ${safeQuantity} জার</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>পণ্যের মূল্য:</strong> ৳ ${safePrice}</p>
-      <p style="margin:0 0 6px;font-size:0.92rem;"><strong>ডেলিভারি চার্জ:</strong> ৳ ${safeDelivery}</p>
-      <p style="margin:0 0 8px;font-size:1.1rem;color:#1a5632;"><strong>সর্বমোট প্রদেয়:</strong> ৳ ${safeGrandTotal}</p>
-      <p style="margin:0;font-size:0.85rem;color:#27ae60;">✓ ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)</p>
-    </div>
+  if (channel === 'imo') {
+    // 1. Copy message automatically
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastOrderMessage).catch(() => {
+        fallbackCopy(lastOrderMessage);
+      });
+    } else {
+      fallbackCopy(lastOrderMessage);
+    }
 
-    <div class="modal-channel-section">
-      <p class="modal-channel-title">👇 মেসেজ পাঠাতে যেকোনো একটি অপশন নির্বাচন করুন:</p>
+    // 2. Mobile Web Share (direct share to IMO)
+    if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      navigator.share({
+        title: 'Pure Nest BD অর্ডার নিশ্চিতকরণ',
+        text: lastOrderMessage
+      }).catch(() => {});
+    }
 
-      <div class="modal-channel-grid">
-        <!-- Option 1: WhatsApp -->
-        <a href="${safeWaUrl}" target="_blank" rel="noopener noreferrer" class="btn-channel-order btn-whatsapp-order">
-          <span class="channel-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </span>
-          <span class="channel-text">
-            <strong>WhatsApp-এ পাঠান</strong>
-            <small>সরাসরি চ্যাট ওপেন হবে</small>
-          </span>
-        </a>
+    detailsDiv.innerHTML = `
+      <div class="modal-status-icon modal-icon-imo">📱</div>
+      <h2 class="modal-title-custom" style="color:#0277bd;">IMO-তে মেসেজ পাঠান</h2>
+      <p class="modal-desc-custom">
+        অর্ডারটি সম্পূর্ণ করতে অনুগ্রহ করে IMO অ্যাপে আমাদের নম্বরে মেসেজটি <strong>পাঠিয়ে দিন বা সরাসরি কল করুন</strong>।
+      </p>
 
-        <!-- Option 2: IMO -->
-        <button type="button" class="btn-channel-order btn-imo-order" onclick="sendViaImo()">
-          <span class="channel-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-          </span>
-          <span class="channel-text">
-            <strong>IMO-তে পাঠান</strong>
-            <small>মেসেজ কপি ও শেয়ার</small>
-          </span>
-        </button>
-      </div>
-
-      <!-- IMO feedback box (hidden by default, shown on IMO button click) -->
-      <div id="imoFeedbackBox" class="imo-feedback-box" style="display:none;">
-        <div class="imo-feedback-status">
-          <span class="imo-check-badge">✅</span>
+      <div class="modal-imo-instruction">
+        <div class="imo-inst-row">
+          <span class="imo-badge-check">📋</span>
           <div>
             <strong>অর্ডার বিবরণ সফলভাবে কপি হয়েছে!</strong>
-            <p>আপনার ইমো (IMO) অ্যাপে <b>+880 1355-175330</b> নম্বরে পেস্ট করে মেসেজ পাঠিয়ে দিন।</p>
+            <p>আপনার IMO অ্যাপ খুলে <b>+880 1355-175330</b> নম্বরে পেস্ট করে পাঠিয়ে দিন।</p>
           </div>
         </div>
-        <div class="imo-feedback-actions">
-          <a href="tel:+8801355175330" class="btn-imo-call">
-            <span>📞</span> ইমো বা সরাসরি ফোন কল করুন (+880 1355-175330)
+        <div class="imo-inst-call">
+          <a href="tel:+8801355175330" class="btn-modal-action btn-modal-call">
+            <span>📞</span> সরাসরি ইমো বা ফোন কল করুন (+880 1355-175330)
           </a>
         </div>
       </div>
-    </div>
 
-    <div style="margin-top:10px;">
-      <button class="btn-modal-dismiss" onclick="closeModal()">✓ ঠিক আছে, উইন্ডো বন্ধ করুন</button>
-    </div>
-  `;
+      <div class="modal-order-summary-box">
+        <p><strong>অর্ডার ট্র্যাকিং আইডি:</strong> <span style="color:#0277bd;font-weight:700;">${safeOrderId}</span></p>
+        <p><strong>গ্রাহকের নাম:</strong> ${safeName}</p>
+        <p><strong>মোবাইল নম্বর:</strong> ${safePhone}</p>
+        <p><strong>ডেলিভারি ঠিকানা:</strong> ${safeAddress}, ${safeDistrict}</p>
+        <p><strong>পণ্য ও সাইজ:</strong> ${safeProduct} — <span style="color:#0277bd;font-weight:700;">${safeVariant}</span></p>
+        <p><strong>পরিমাণ:</strong> ${safeQuantity} জার</p>
+        <p><strong>সর্বমোট প্রদেয়:</strong> ৳ ${safeGrandTotal} (ক্যাশ অন ডেলিভারি)</p>
+      </div>
+
+      <div class="modal-actions-wrap">
+        <button type="button" class="btn-modal-action btn-modal-copy" onclick="copyOrderTextAgain()">
+          <span>📋</span> মেসেজ আবার কপি করুন
+        </button>
+        <button type="button" class="btn-modal-dismiss" onclick="closeModal()">✓ মেসেজ পাঠিয়েছি, উইন্ডো বন্ধ করুন</button>
+      </div>
+    `;
+  } else {
+    // WhatsApp flow
+    try {
+      window.open(safeWaUrl, '_blank');
+    } catch (popupErr) {
+      console.warn('Popup blocked, customer can tap WhatsApp button');
+    }
+
+    detailsDiv.innerHTML = `
+      <div class="modal-status-icon modal-icon-wa">💬</div>
+      <h2 class="modal-title-custom">WhatsApp-এ মেসেজ পাঠান</h2>
+      <p class="modal-desc-custom">
+        অর্ডারটি সম্পূর্ণ করতে অনুগ্রহ করে WhatsApp-এ মেসেজটি <strong>"Send" (পাঠান)</strong> করুন।
+      </p>
+
+      <div class="modal-order-summary-box">
+        <p><strong>অর্ডার ট্র্যাকিং আইডি:</strong> <span style="color:#1a5632;font-weight:700;">${safeOrderId}</span></p>
+        <p><strong>গ্রাহকের নাম:</strong> ${safeName}</p>
+        <p><strong>মোবাইল নম্বর:</strong> ${safePhone}</p>
+        <p><strong>ডেলিভারি ঠিকানা:</strong> ${safeAddress}, ${safeDistrict}</p>
+        <p><strong>পণ্য ও সাইজ:</strong> ${safeProduct} — <span style="color:#1a5632;font-weight:700;">${safeVariant}</span></p>
+        <p><strong>পরিমাণ:</strong> ${safeQuantity} জার</p>
+        <p><strong>সর্বমোট প্রদেয়:</strong> ৳ ${safeGrandTotal} (ক্যাশ অন ডেলিভারি)</p>
+      </div>
+
+      <div class="modal-actions-wrap">
+        <a href="${safeWaUrl}" target="_blank" rel="noopener noreferrer" class="btn-modal-action btn-modal-wa">
+          <span>💬</span> WhatsApp চ্যাট ওপেন করুন
+        </a>
+        <p style="font-size:0.83rem;color:#666;margin:4px 0 10px;">(WhatsApp স্বয়ংক্রিয়ভাবে ওপেন না হলে ওপরের বাটনে ক্লিক করুন)</p>
+        <button type="button" class="btn-modal-dismiss" onclick="closeModal()">✓ মেসেজ পাঠিয়েছি, উইন্ডো বন্ধ করুন</button>
+      </div>
+    `;
+  }
 
   const modalOverlay = document.getElementById('modalOverlay');
   if (modalOverlay) {
@@ -513,31 +586,17 @@ function showModal(orderData) {
   document.body.style.overflow = 'hidden';
 }
 
-function sendViaImo() {
-  const msg = lastOrderMessage || '';
-
-  // 1. Copy message to clipboard
+function copyOrderTextAgain() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(msg).catch(() => {
-      fallbackCopy(msg);
+    navigator.clipboard.writeText(lastOrderMessage).then(() => {
+      alert('✅ অর্ডারের তথ্য সফলভাবে আবার কপি করা হয়েছে!');
+    }).catch(() => {
+      fallbackCopy(lastOrderMessage);
+      alert('✅ অর্ডারের তথ্য সফলভাবে আবার কপি করা হয়েছে!');
     });
   } else {
-    fallbackCopy(msg);
-  }
-
-  // 2. If mobile Web Share is supported, open native share sheet with IMO
-  if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    navigator.share({
-      title: 'Pure Nest BD অর্ডার নিশ্চিতকরণ',
-      text: msg
-    }).catch(() => {});
-  }
-
-  // 3. Reveal IMO instructions box with smooth focus
-  const feedbackBox = document.getElementById('imoFeedbackBox');
-  if (feedbackBox) {
-    feedbackBox.style.display = 'block';
-    feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    fallbackCopy(lastOrderMessage);
+    alert('✅ অর্ডারের তথ্য সফলভাবে আবার কপি করা হয়েছে!');
   }
 }
 
